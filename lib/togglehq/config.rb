@@ -6,7 +6,7 @@ module Togglehq
     attr_accessor :auth_token
 
     def initialize
-      @host = "http://localhost:3000"
+      @host = "https://api.togglehq.com"
     end
   end
 end

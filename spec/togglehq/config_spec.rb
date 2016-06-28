@@ -29,9 +29,9 @@ module Togglehq
     end
 
     describe "#host" do
-      it "defaults to http://localhost:3000" do
+      it "defaults to https://api.togglehq.com" do
         config = Config.new
-        expect(config.host).to eq("http://localhost:3000")
+        expect(config.host).to eq("https://api.togglehq.com")
       end
 
       it "can set a value for host" do
