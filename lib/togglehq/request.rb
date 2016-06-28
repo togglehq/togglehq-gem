@@ -40,7 +40,7 @@ module Togglehq
     private
 
     def api_url(path)
-      "#{Togglehq.config.host}/api/#{path}"
+      "#{Togglehq.config.uri}/api/#{path}"
     end
 
     def request(method, path, params, success_status = 200)
@@ -56,7 +56,7 @@ module Togglehq
       conn = Faraday.new
       conn.headers = { 'Authorization' => "Basic #{basic}" }
 
-      response = conn.post("#{Togglehq.config.host}/oauth/token", {grant_type: "client_credentials"})
+      response = conn.post("#{Togglehq.config.uri}/oauth/token", {grant_type: "client_credentials"})
 
       Togglehq.config.auth_token = JSON.parse(response.body)["access_token"]
     end

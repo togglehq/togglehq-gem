@@ -28,16 +28,16 @@ module Togglehq
       end
     end
 
-    describe "#host" do
+    describe "#uri" do
       it "defaults to https://api.togglehq.com" do
         config = Config.new
-        expect(config.host).to eq("https://api.togglehq.com")
+        expect(config.uri).to eq("https://api.togglehq.com")
       end
 
-      it "can set a value for host" do
+      it "can set a value for uri" do
         config = Config.new
-        config.host = "http://localhost:3003"
-        expect(config.host).to eq("http://localhost:3003")
+        config.uri = "http://localhost:3003"
+        expect(config.uri).to eq("http://localhost:3003")
       end
     end
 
@@ -49,8 +49,8 @@ module Togglehq
 
       it "can set a value for auth_token" do
         config = Config.new
-        config.host = "qwerty"
-        expect(config.host).to eq("qwerty")
+        config.auth_token = "qwerty"
+        expect(config.auth_token).to eq("qwerty")
       end
     end
   end

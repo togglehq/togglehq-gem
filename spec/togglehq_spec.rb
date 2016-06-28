@@ -24,7 +24,7 @@ describe Togglehq do
       Togglehq.configure do |config|
         config.client_id = 12345
         config.client_secret = 67890
-        config.host = "http://localhost:3003"
+        config.uri = "http://localhost:3003"
       end
     end
 
@@ -36,8 +36,8 @@ describe Togglehq do
       expect(Togglehq.config.client_secret).to eq(67890)
     end
 
-    it "sets the host correctly" do
-      expect(Togglehq.config.host).to eq("http://localhost:3003")
+    it "sets the uri correctly" do
+      expect(Togglehq.config.uri).to eq("http://localhost:3003")
     end
 
     after :each do
