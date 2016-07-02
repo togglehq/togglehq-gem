@@ -20,4 +20,11 @@ module Togglehq
   def self.configure
     yield config
   end
+
+  def self.connection
+    conn = Faraday.new(:url => config.uri) do |faraday|
+      faraday.adapter :net_http_persistent
+    end
+    conn
+  end
 end

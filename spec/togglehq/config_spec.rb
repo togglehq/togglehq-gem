@@ -41,16 +41,29 @@ module Togglehq
       end
     end
 
-    describe "#auth_token" do
+    describe "#access_token" do
       it "defaults to nil" do
         config = Config.new
-        expect(config.auth_token).to eq(nil)
+        expect(config.access_token).to eq(nil)
       end
 
-      it "can set a value for auth_token" do
+      it "can set a value for access_token" do
         config = Config.new
-        config.auth_token = "qwerty"
-        expect(config.auth_token).to eq("qwerty")
+        config.access_token = "qwerty"
+        expect(config.access_token).to eq("qwerty")
+      end
+    end
+
+    describe "#refresh_token" do
+      it "defaults to nil" do
+        config = Config.new
+        expect(config.refresh_token).to eq(nil)
+      end
+
+      it "can set a value for refresh_token" do
+        config = Config.new
+        config.refresh_token = "qwerty"
+        expect(config.refresh_token).to eq("qwerty")
       end
     end
   end

@@ -10,7 +10,7 @@ module Togglehq
     def initialize(path = "", params = {})
       @path = path
       @data = params
-      @token = Togglehq.config.auth_token || request_auth_token
+      @token = Togglehq.config.access_token || request_access_token
 
       @headers = {
         'Accept' => 'application/vnd.togglehq.com;version=1',
@@ -40,25 +40,32 @@ module Togglehq
     private
 
     def api_url(path)
-      "#{Togglehq.config.uri}/api/#{path}"
+      "/api/#{path}"
     end
 
     def request(method, path, params, success_status = 200)
-      conn = Faraday.new
-      conn.headers = headers
-
-      response = conn.send(method, api_url(path), params)
+      conn = Togglehq.connection
+      response = conn.send(method) do |req|
+        req.url api_url(path)
+        req.headers['Content-Type'] = 'application/json'
+        req.headers.merge!(headers)
+        req.body = params.to_json
+      end
+      response
     end
 
-    def request_auth_token
+    def request_access_token
       basic = Base64.strict_encode64("#{Togglehq.config.client_id}:#{Togglehq.config.client_secret}")
 
-      conn = Faraday.new
-      conn.headers = { 'Authorization' => "Basic #{basic}" }
-
-      response = conn.post("#{Togglehq.config.uri}/oauth/token", {grant_type: "client_credentials"})
-
-      Togglehq.config.auth_token = JSON.parse(response.body)["access_token"]
+      conn = Togglehq.connection
+      response = conn.post do |req|
+        req.url "/oauth/token"
+        req.headers['Authorization'] = "Basic #{basic}"
+        req.body = {grant_type: "client_credentials"}.to_json
+      end
+      response_body = JSON.parse(response.body)
+      Togglehq.config.access_token = response.body["access_token"]
+      Togglehq.config.refresh_token = response.body["refresh_token"]
     end
   end
 end
