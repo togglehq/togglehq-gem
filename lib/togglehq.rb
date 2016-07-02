@@ -2,7 +2,6 @@ require 'togglehq/version'
 require 'togglehq/config'
 require 'togglehq/request'
 require 'togglehq/notification'
-require 'togglehq/notification_batch'
 
 module Togglehq
   class << self
