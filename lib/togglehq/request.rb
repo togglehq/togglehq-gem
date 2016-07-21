@@ -61,6 +61,7 @@ module Togglehq
       response = conn.post do |req|
         req.url "/oauth/token"
         req.headers['Authorization'] = "Basic #{basic}"
+        req.headers['Content-Type'] = 'application/json'
         req.body = {grant_type: "client_credentials"}.to_json
       end
       response_body = JSON.parse(response.body)
