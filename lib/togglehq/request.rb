@@ -65,8 +65,8 @@ module Togglehq
         req.body = {grant_type: "client_credentials"}.to_json
       end
       response_body = JSON.parse(response.body)
-      Togglehq.config.access_token = response.body["access_token"]
-      Togglehq.config.refresh_token = response.body["refresh_token"]
+      Togglehq.config.access_token = response_body["access_token"]
+      Togglehq.config.refresh_token = response_body["refresh_token"]
     end
   end
 end
