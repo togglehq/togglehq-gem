@@ -5,11 +5,15 @@ require 'togglehq/notification'
 
 module Togglehq
   class << self
-    attr_writer :config
+    attr_writer :config, :cache
   end
 
   def self.config
     @config ||= Config.new
+  end
+
+  def self.cache
+    @cache ||= Hash.new
   end
 
   def self.reset
