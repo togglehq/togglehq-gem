@@ -5,6 +5,7 @@ module Togglehq
     attr_accessor :uri
     attr_accessor :access_token
     attr_accessor :refresh_token
+    attr_accessor :log_requests
 
     def initialize
       @uri = "https://api.togglehq.com"

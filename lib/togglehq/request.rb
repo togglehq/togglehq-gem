@@ -4,38 +4,37 @@ require 'base64'
 
 module Togglehq
   class Request
+
+    V1 = "application/vnd.togglehq.com;version=1"
+
     attr_accessor :path, :data
     attr_reader :headers
 
-    def initialize(path = "", params = {})
+    def initialize(path="", params={}, version=V1)
       @path = path
       @data = params
       ensure_togglehq_api_access_token
       @token = Togglehq.cache["togglehq-api-access-token"]
 
       @headers = {
-        'Accept' => 'application/vnd.togglehq.com;version=1',
-        'Authorization' => "Bearer #{@token}"
+        'Accept' => version,
       }
     end
 
-    def get!
-      request(:get, path, data).data
+    def get!(version=V1)
+      request(:get, path, data, version)
     end
 
-    def post!
-      response = request(:post, path, data)
-      JSON.parse(response.body)
+    def post!(version=V1)
+      request(:post, path, data, version)
     end
 
-    def put!
-      response = request(:put, path, data)
-      JSON.parse(response.body)
+    def put!(version=V1)
+      request(:put, path, data, version)
     end
 
-    def delete!
-      response = request(:delete, path, data)
-      JSON.parse(response.body)
+    def delete!(version=V1)
+      request(:delete, path, data, version)
     end
 
 
@@ -47,7 +46,7 @@ module Togglehq
 
     def request(method, path, params, success_status = 200)
       ensure_togglehq_api_access_token
-      conn = Togglehq.connection
+      conn = authenticated_togglehq_api_connection
       response = conn.send(method) do |req|
         req.url api_url(path)
         req.headers['Content-Type'] = 'application/json'
@@ -87,7 +86,7 @@ module Togglehq
         response = togglehq_api_connection.post do |req|
           req.url "/oauth/token"
           req.headers['Content-Type'] = 'application/json'
-          req.body = {grant_type: "client_credentials"}.to_json #, scope: "togglehq-lib"}.to_json
+          req.body = {grant_type: "client_credentials", scope: "togglehq-lib"}.to_json
         end
         begin
           response_document = JSON.parse(response.body)

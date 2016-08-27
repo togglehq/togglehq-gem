@@ -2,6 +2,8 @@ require 'togglehq/version'
 require 'togglehq/config'
 require 'togglehq/request'
 require 'togglehq/notification'
+require 'togglehq/user'
+require 'logger'
 
 module Togglehq
   class << self
@@ -20,6 +22,10 @@ module Togglehq
     @config = Config.new
   end
 
+  def self.logger
+    @logger ||= ::Logger.new(STDOUT)
+  end
+
   def self.configure
     yield config
   end
@@ -27,6 +33,7 @@ module Togglehq
   def self.connection
     conn = Faraday.new(:url => config.uri) do |faraday|
       faraday.adapter :net_http_persistent
+      faraday.response :logger, self.logger, bodies: true if config.log_requests
     end
     conn
   end
