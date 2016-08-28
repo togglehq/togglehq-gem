@@ -6,49 +6,47 @@ module Togglehq
   class Request
 
     V1 = "application/vnd.togglehq.com;version=1"
+    ACCESS_TOKEN_KEY = "togglehq-api-access-token"
 
-    attr_accessor :path, :data
+    attr_accessor :path, :params
     attr_reader :headers
 
     def initialize(path="", params={}, version=V1)
       @path = path
-      @data = params
-      ensure_togglehq_api_access_token
-      @token = Togglehq.cache["togglehq-api-access-token"]
-
+      @params = params
       @headers = {
         'Accept' => version,
       }
     end
 
-    def get!(version=V1)
-      request(:get, path, data, version)
+    def get!
+      request(:get, path, params)
     end
 
-    def post!(version=V1)
-      request(:post, path, data, version)
+    def post!
+      request(:post, path, params)
     end
 
-    def put!(version=V1)
-      request(:put, path, data, version)
+    def put!
+      request(:put, path, params)
     end
 
-    def delete!(version=V1)
-      request(:delete, path, data, version)
+    def patch!
+      request(:patch, path, params)
+    end
+
+    def delete!
+      request(:delete, path, params)
     end
 
 
     private
 
-    def api_url(path)
-      "/#{path}"
-    end
-
-    def request(method, path, params, success_status = 200)
+    def request(method, path, params)
       ensure_togglehq_api_access_token
       conn = authenticated_togglehq_api_connection
       response = conn.send(method) do |req|
-        req.url api_url(path)
+        req.url path
         req.headers['Content-Type'] = 'application/json'
         req.headers.merge!(headers)
         req.body = params.to_json
@@ -59,19 +57,19 @@ module Togglehq
     def togglehq_api_connection
       conn = Togglehq.connection
       basic = Base64.strict_encode64("#{Togglehq.config.client_id}:#{Togglehq.config.client_secret}")
-      conn.headers = { 'Authorization' => "Basic #{basic}" }
+      conn.headers.merge!({'Authorization' => "Basic #{basic}"})
       conn
     end
 
     def authenticated_togglehq_api_connection
-      token = Togglehq.cache["togglehq-api-access-token"]
-      conn = togglehq_api_connection
-      conn.headers.merge!('Authorization' => "Bearer #{token["access_token"]}")
+      token = Togglehq.cache[ACCESS_TOKEN_KEY]
+      conn = Togglehq.connection
+      conn.headers.merge!({'Authorization' => "Bearer #{token["access_token"]}"})
       conn
     end
 
     def ensure_togglehq_api_access_token
-      token = Togglehq.cache["togglehq-api-access-token"]
+      token = Togglehq.cache[ACCESS_TOKEN_KEY]
       if !token.nil?
         expires_at = Time.at(token["created_at"] + token["expires_in"])
         if expires_at <= Time.now
@@ -110,7 +108,7 @@ module Togglehq
     end
 
     def set_authenticated_oauth_token(response_document)
-      Togglehq.cache["togglehq-api-access-token"] = response_document
+      Togglehq.cache[ACCESS_TOKEN_KEY] = response_document
     end
   end
 end
