@@ -22,8 +22,13 @@ Or install it yourself as:
 require 'togglehq'
 
 Togglehq.configure do |config|
+  # These should be set to the "Master OAuth" client id and client secret
+  # for your app from the ToggleHQ dashboard
   config.client_id = ENV['TOGGLEHQ_CLIENT_ID']
   config.client_secret = ENV['TOGGLEHQ_CLIENT_SECRET']
+
+  # To log the HTTP requests/responses to and from the ToggleHQ API, set log_requests to true (defaults to false)
+  config.log_requests = true
 end
 ```
 
@@ -31,19 +36,27 @@ end
 
 ### Users
 
-Create a user
-```ruby
+Create a user for your app
 
+```ruby
+user = Togglehq::User.new
+user.identifier = "abcdef0123456789"
+user.save
 ```
 
-Find a user
+Find an existing user for your app
 ```ruby
-
+user = Togglehq::User.find_by_identifier("abcdef0123456789")
 ```
+
+If a user with the given identifier cannot be found, `nil` will be returned.
+
+Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
+
 
 ### Settings
 
-Get all settings
+Get all settings for your app
 ```ruby
 ```
 
