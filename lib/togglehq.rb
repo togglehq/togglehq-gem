@@ -1,9 +1,9 @@
 require 'togglehq/version'
 require 'togglehq/config'
 require 'togglehq/request'
-require 'togglehq/notification'
-require 'togglehq/user'
 require 'logger'
+
+require 'togglehq/notify'
 
 module Togglehq
   class << self

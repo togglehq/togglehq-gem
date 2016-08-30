@@ -34,24 +34,26 @@ end
 
 ## Usage
 
-### Users
+### ToggleHQ Notify
+
+#### Users
 
 Create a user for your app
 
 ```ruby
-user = Togglehq::User.new
+user = Togglehq::Notify::User.new
 user.identifier = "abcdef0123456789"
 user.save
 ```
 
 Find an existing user for your app
 ```ruby
-user = Togglehq::User.find_by_identifier("abcdef0123456789")
+user = Togglehq::Notify::User.find_by_identifier("abcdef0123456789")
 ```
 
 If a user with the given identifier cannot be found, `nil` will be returned.
 
-Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
+Alternatively, you can call `Togglehq::Notify::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
 
 
 ### Settings
@@ -59,6 +61,18 @@ Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will rai
 Get all settings for your app
 ```ruby
 ```
+
+Enable a setting for a user
+```ruby
+user.enable_setting!("group_key", "setting_key")
+```
+This will return true upon success, and raise a RuntimeError on failure.
+
+Disable a setting for a user
+```ruby
+user.disable_setting!("group_key", "setting_key")
+```
+This will return true upon success, and raise a RuntimeError on failure.
 
 ### Notifications
 
