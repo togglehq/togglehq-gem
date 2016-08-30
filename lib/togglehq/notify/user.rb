@@ -4,6 +4,11 @@ module Togglehq
       attr_accessor :identifier
       attr_accessor :settings
 
+      def initialize(params = {})
+        @identifier = params[:identifier]
+        @settings = params[:settings]
+      end
+
       # Finds an app user by the given identifier. If no record is found, returns nil.
       def self.find_by_identifier(identifier)
         response = Togglehq::Request.new("/users/#{identifier}").get!

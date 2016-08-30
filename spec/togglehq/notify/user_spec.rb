@@ -3,6 +3,15 @@ require 'spec_helper'
 module Togglehq
   module Notify
     describe User do
+
+      context "#initialize" do
+        it "initializes from supported params" do
+          user = User.new(identifier: "8sdfjlksdjhf", settings: [{name: "Test", key: "test"}])
+          expect(user.identifier).to eq("8sdfjlksdjhf")
+          expect(user.settings).to eq([{name: "Test", key: "test"}])
+        end
+      end
+
       context ".find_by_identifier" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
