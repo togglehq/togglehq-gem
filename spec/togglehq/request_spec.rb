@@ -92,16 +92,20 @@ module Togglehq
 
       context "cached token" do
         context "token expired" do
-          let(:expired_token) { {"access_token"=>"foo", "expires_in" => 1, "created_at" => Date.new(2016, 1, 1).to_time.to_i, "refresh_token" => "bar"} }
+          let(:expired_token) { {"access_token"=>"foo", "expires_in" => 1, "created_at" => Date.new(2016, 1, 1).to_time.to_i} }
           let!(:token) { Togglehq.cache[Togglehq::Request::ACCESS_TOKEN_KEY] = expired_token }
+          let(:mock_response) { double("response") }
+          let(:success_response) { {"access_token" => "foo", "created_at" => Time.now.to_i, "expires_in" => 123456} }
 
-          it "gets a new access token from the refresh token" do
+          it "gets a new access token" do
             expect(request).to receive(:togglehq_api_connection).and_return(mock_connection)
-            expect(mock_connection).to receive(:post).and_yield(mock_request)
+            expect(mock_connection).to receive(:post).and_yield(mock_request).and_return(mock_response)
+            expect(mock_response).to receive(:body).and_return(success_response.to_json)
             expect(mock_request).to receive(:url).with("/oauth/token")
             expect(mock_request).to receive(:headers).and_return(mock_headers)
             expect(mock_headers).to receive(:[]=).with("Content-Type", "application/json")
-            expect(mock_request).to receive(:body=).with({grant_type: "refresh_token", refresh_token: "bar", scope: "togglehq-lib"}.to_json)
+            expect(mock_request).to receive(:body=).with({grant_type: "client_credentials", scope: "togglehq-lib"}.to_json)
+            expect(request).to receive(:set_authenticated_oauth_token)
             request.send(:ensure_togglehq_api_access_token)
           end
         end
@@ -115,7 +119,7 @@ module Togglehq
         end
 
         context "success response" do
-          let(:success_response) { {"access_token" => "foo", "refresh_token" => "bar", "created_at" => Time.now.to_i, "expires_in" => 123456} }
+          let(:success_response) { {"access_token" => "foo", "created_at" => Time.now.to_i, "expires_in" => 123456} }
 
           it "gets a new access token" do
             expect(request).to receive(:togglehq_api_connection).and_return(mock_connection)
