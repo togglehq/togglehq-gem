@@ -58,9 +58,18 @@ Alternatively, you can call `Togglehq::Notify::User.find_by_identifier!`, which 
 
 ### Settings
 
-Get all settings for your app
+Get all setting groups and settings for your app
 ```ruby
+settings = Togglehq::Notify::Settings.all
 ```
+
+A `Togglehq::Notify::Settings` object has a `groups` attribute which contains an array of all setting groups:
+```ruby
+settings.groups
+ => [{"name"=>"Push Notifications", "key"=>"push_notification", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
+```
+
+Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
 
 Enable a setting for a user
 ```ruby
