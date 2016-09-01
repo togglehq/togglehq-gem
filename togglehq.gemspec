@@ -9,9 +9,9 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Toggle"]
   spec.email         = ["hello@togglehq.com"]
 
-  spec.summary       = %q{Gem to wrap the togglehq API}
-  spec.description   = %q{Gem to wrap the togglehq API}
-  spec.homepage      = "https://togglehq.com"
+  spec.summary       = %q{Ruby gem wrapper for the ToggleHQ API}
+  spec.description   = %q{Ruby gem wrapper for the ToggleHQ API}
+  spec.homepage      = "https://www.togglehq.com"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

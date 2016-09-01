@@ -108,6 +108,13 @@ notification.batch_send([user1, user2, ..., user2])
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
+To send this notification as a global message to all of the users in your app:
+```ruby
+notification.send_global
+```
+This will return true upon success, and raise a RuntimeError on failure.
+
+
 ## Gotchas
 
 If you encounter SSL errors while using the togglehq-gem similar to the following:

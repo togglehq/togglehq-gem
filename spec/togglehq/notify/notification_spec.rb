@@ -163,6 +163,80 @@ module Togglehq
           end
         end
       end
+
+      context "#send_global" do
+        let(:mock_request) { double("request") }
+        let(:mock_response) { double("response") }
+        let(:notification) { Notification.new(group_key: "foo", setting_key: "bar", message: "hi mom") }
+        let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
+
+        context "403 response" do
+          it "raises an error" do
+            expect(Togglehq::Request).to receive(:new).with("/notifications",
+                                                            :notification => {:group => "foo",
+                                                                              :setting => "bar",
+                                                                              :message => "hi mom",
+                                                                              :global => true}).and_return(mock_request)
+            expect(mock_request).to receive(:post!).and_return(mock_response)
+            expect(mock_response).to receive(:status).and_return(403)
+            expect {notification.send_global}.to raise_error(RuntimeError, "Access denied. You must use your Master OAuth client_id and client_secret to send push notifications.")
+          end
+        end
+
+        context "404 response" do
+          it "raises an error" do
+            expect(Togglehq::Request).to receive(:new).with("/notifications",
+                                                            :notification => {:group => "foo",
+                                                                              :setting => "bar",
+                                                                              :message => "hi mom",
+                                                                              :global => true}).and_return(mock_request)
+            expect(mock_request).to receive(:post!).and_return(mock_response)
+            expect(mock_response).to receive(:status).twice.and_return(404)
+            expect(mock_response).to receive(:body).and_return(error_response)
+            expect {notification.send_global}.to raise_error(RuntimeError, "something bad has happened")
+          end
+        end
+
+        context "422 response" do
+          it "raises an error" do
+            expect(Togglehq::Request).to receive(:new).with("/notifications",
+                                                            :notification => {:group => "foo",
+                                                                              :setting => "bar",
+                                                                              :message => "hi mom",
+                                                                              :global => true}).and_return(mock_request)
+            expect(mock_request).to receive(:post!).and_return(mock_response)
+            expect(mock_response).to receive(:status).exactly(3).times.and_return(422)
+            expect(mock_response).to receive(:body).and_return(error_response)
+            expect {notification.send_global}.to raise_error(RuntimeError, "something bad has happened")
+          end
+        end
+
+        context "200 response" do
+          it "returns true" do
+            expect(Togglehq::Request).to receive(:new).with("/notifications",
+                                                            :notification => {:group => "foo",
+                                                                              :setting => "bar",
+                                                                              :message => "hi mom",
+                                                                              :global => true}).and_return(mock_request)
+            expect(mock_request).to receive(:post!).and_return(mock_response)
+            expect(mock_response).to receive(:status).exactly(4).times.and_return(200)
+            expect(notification.send_global).to eq(true)
+          end
+        end
+
+        context "unexpected response" do
+          it "raises an error" do
+            expect(Togglehq::Request).to receive(:new).with("/notifications",
+                                                            :notification => {:group => "foo",
+                                                                              :setting => "bar",
+                                                                              :message => "hi mom",
+                                                                              :global => true}).and_return(mock_request)
+            expect(mock_request).to receive(:post!).and_return(mock_response)
+            expect(mock_response).to receive(:status).exactly(4).times.and_return(500)
+            expect {notification.send_global}.to raise_error(RuntimeError, "Unexpected error sending global notification")
+          end
+        end
+      end
     end
   end
 end
