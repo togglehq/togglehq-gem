@@ -41,8 +41,7 @@ end
 Create a user for your app
 
 ```ruby
-user = Togglehq::Notify::User.new
-user.identifier = "abcdef0123456789"
+user = Togglehq::Notify::User.new(:identifier => "abcdef0123456789")
 user.save
 ```
 
@@ -66,7 +65,7 @@ settings = Togglehq::Notify::Settings.all
 A `Togglehq::Notify::Settings` object has a `groups` attribute which contains an array of all setting groups:
 ```ruby
 settings.groups
- => [{"name"=>"Push Notifications", "key"=>"push_notification", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
+ => [{"name"=>"Friends", "key"=>"friends", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
 ```
 
 Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
@@ -85,6 +84,29 @@ This will return true upon success, and raise a RuntimeError on failure.
 
 ### Notifications
 
+To send push notifications, first construct a `Togglehq::Notify::Notification` object specifying a setting group key, setting key, and message.
+
+```ruby
+notification = Togglehq::Notify::Notification.new(:group_key => "friends", :setting_key => "friend_request", :message => "You have a new friend request!")
+```
+To send this notification to a single user:
+
+```ruby
+user = Togglehq::Notify::User.find_by_identifier("abc123")
+notification.send(user)
+```
+This will return true upon success, and raise a RuntimeError on failure.
+
+To send this notification to a batch of users:
+```ruby
+user1 = Togglehq::Notify::User.new(:identifier => "abc123")
+user2 = Togglehq::Notify::User.new(:identifier => "def456")
+...
+userN = Togglehq::Notify::User.new(:identifier => "xyz890")
+
+notification.batch_send([user1, user2, ..., user2])
+```
+This will return true upon success, and raise a RuntimeError on failure.
 
 ## Gotchas
 
