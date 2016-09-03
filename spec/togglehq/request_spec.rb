@@ -105,7 +105,7 @@ module Togglehq
             expect(mock_request).to receive(:headers).and_return(mock_headers)
             expect(mock_headers).to receive(:[]=).with("Content-Type", "application/json")
             expect(mock_request).to receive(:body=).with({grant_type: "client_credentials", scope: "togglehq-lib"}.to_json)
-            expect(request).to receive(:set_authenticated_oauth_token)
+            expect(Togglehq.cache).to receive(:[]=).with(Togglehq::Request::ACCESS_TOKEN_KEY, success_response)
             request.send(:ensure_togglehq_api_access_token)
           end
         end
@@ -129,7 +129,7 @@ module Togglehq
             expect(mock_request).to receive(:headers).and_return(mock_headers)
             expect(mock_headers).to receive(:[]=).with("Content-Type", "application/json")
             expect(mock_request).to receive(:body=).with({grant_type: "client_credentials", scope: "togglehq-lib"}.to_json)
-            expect(request).to receive(:set_authenticated_oauth_token)
+            expect(Togglehq.cache).to receive(:[]=).with(Togglehq::Request::ACCESS_TOKEN_KEY, success_response)
             request.send(:ensure_togglehq_api_access_token)
           end
         end

@@ -34,28 +34,29 @@ end
 
 ## Usage
 
-### ToggleHQ Notify
-
-#### Users
+### Users
 
 Create a user for your app
 
 ```ruby
-user = Togglehq::Notify::User.new(:identifier => "abcdef0123456789")
+user = Togglehq::User.new(:identifier => "abcdef0123456789")
 user.save
 ```
 
 Find an existing user for your app
 ```ruby
-user = Togglehq::Notify::User.find_by_identifier("abcdef0123456789")
+user = Togglehq::User.find_by_identifier("abcdef0123456789")
 ```
 
 If a user with the given identifier cannot be found, `nil` will be returned.
 
-Alternatively, you can call `Togglehq::Notify::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
+Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
 
 
-### Settings
+### ToggleHQ Notify Usage
+
+
+#### Settings
 
 Get all setting groups and settings for your app
 ```ruby
@@ -70,19 +71,46 @@ settings.groups
 
 Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
 
+
+#### User Settings
+
+`Togglehq::Notify::UserSettings` enapsulates a specific user's notification preferences for your app.
+Create one by passing a `Togglehq::User` object:
+
+```ruby
+user_settings = Togglehq::Notify::UserSettings.new(user)
+```
+
+Get the user's settings by calling the `groups` method:
+```ruby
+user_settings.groups
+ => [{"name"=>"Friends", "key"=>"friends", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true, "enabled"=>true}]}] 
+```
+
+Like `Togglehq::Notify::Settings`, a `Togglehq::Notify::UserSettings` object has a `groups` attribute which contains an array of all setting groups.
+Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
+In addition, each user setting contains an enabled flag, indicating whether the user has enabled that particular setting or not.
+
+Please note that a `Togglehq::Notify::UserSettings` object's `groups` property is memoized when fetched from the ToggleHQ API. To reload
+the settings, call the `reload!` method on the `Togglehq::Notify::UserSettings` object:
+
+```ruby
+user_settings.reload!
+```
+
 Enable a setting for a user
 ```ruby
-user.enable_setting!("group_key", "setting_key")
+user_settings.enable_setting!("group_key", "setting_key")
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
 Disable a setting for a user
 ```ruby
-user.disable_setting!("group_key", "setting_key")
+user_settings.disable_setting!("group_key", "setting_key")
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
-### Notifications
+#### Notifications
 
 To send push notifications, first construct a `Togglehq::Notify::Notification` object specifying a setting group key, setting key, and message.
 

@@ -91,7 +91,7 @@ module Togglehq
         if response_document.has_key?("error")
           process_api_error(response_document)
         else
-          set_authenticated_oauth_token(response_document)
+          Togglehq.cache[ACCESS_TOKEN_KEY] = response_document
         end
       rescue JSON::ParserError
         raise "Fatal: unexpected response from ToggleHQ API: #{response.body}"
@@ -104,10 +104,6 @@ module Togglehq
       else
         raise "Unexpected error from ToggleHQ API: #{response_document["error_description"]}"
       end
-    end
-
-    def set_authenticated_oauth_token(response_document)
-      Togglehq.cache[ACCESS_TOKEN_KEY] = response_document
     end
   end
 end

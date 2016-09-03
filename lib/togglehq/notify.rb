@@ -1,3 +1,3 @@
 require 'togglehq/notify/notification'
-require 'togglehq/notify/user'
 require 'togglehq/notify/settings'
+require 'togglehq/notify/user_settings'
