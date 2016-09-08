@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "togglehq"
   spec.version       = Togglehq::VERSION
   spec.authors       = ["Toggle"]
-  spec.email         = ["hello@togglehq.com"]
+  spec.email         = ["support@togglehq.com"]
 
   spec.summary       = %q{Ruby gem wrapper for the ToggleHQ API}
   spec.description   = %q{Ruby gem wrapper for the ToggleHQ API}
