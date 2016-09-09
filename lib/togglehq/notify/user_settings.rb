@@ -59,6 +59,8 @@ module Togglehq
         if response.status == 200
           @groups = JSON.parse(response.body)
           return @groups
+        elsif response.status == 404
+          raise "user not found"
         else
           raise "Unexpected error getting app settings"
         end

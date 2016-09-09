@@ -40,6 +40,15 @@ module Togglehq
           end
         end
 
+        context "response status 404" do
+          it "raises a RuntimeError with a message that the user was not found" do
+            expect(Togglehq::Request).to receive(:new).with("/settings", {"user" => {"identifier" => user.identifier}}).and_return(mock_request)
+            expect(mock_request).to receive(:get!).and_return(mock_response)
+            expect(mock_response).to receive(:status).twice.and_return(404)
+            expect {user_settings.groups}.to raise_error(RuntimeError, "user not found")
+          end
+        end
+
         context "unexpected status" do
           it "raises a RuntimeError" do
             expect(Togglehq::Request).to receive(:new).with("/settings", {"user" => {"identifier" => user.identifier}}).and_return(mock_request)
