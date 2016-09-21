@@ -59,6 +59,9 @@ module Togglehq
     context ".find_by_identifier!" do
       let(:mock_request) { double("request") }
       let(:mock_response) { double("response") }
+      let(:success_response) do
+        {"identifier" => "foo"}.to_json
+      end
 
       context "user not found" do
         it "raises a RuntimeError" do
@@ -66,6 +69,19 @@ module Togglehq
           expect(mock_request).to receive(:get!).and_return(mock_response)
           allow(mock_response).to receive(:status).and_return(404)
           expect {Togglehq::User.find_by_identifier!("foo")}.to raise_error(RuntimeError, "Could not find user with identifier foo")
+        end
+      end
+
+      context "response status 200" do
+        it "returns a Togglehq::User object" do
+          expect(Togglehq::Request).to receive(:new).with("/users/foo").and_return(mock_request)
+          expect(mock_request).to receive(:get!).and_return(mock_response)
+          expect(mock_response).to receive(:body).and_return(success_response)
+          allow(mock_response).to receive(:status).and_return(200)
+          user = Togglehq::User.find_by_identifier!("foo")
+          expect(user).not_to eq(nil)
+          expect(user).to be_a(Togglehq::User)
+          expect(user.identifier).to eq("foo")
         end
       end
     end

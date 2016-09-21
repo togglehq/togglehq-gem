@@ -25,6 +25,7 @@ module Togglehq
     def self.find_by_identifier!(identifier)
       user = self.find_by_identifier(identifier)
       raise "Could not find user with identifier #{identifier}" if user.nil?
+      return user
     end
 
     # Saves a new user
