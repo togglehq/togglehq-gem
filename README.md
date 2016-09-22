@@ -56,81 +56,81 @@ Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will rai
 ### ToggleHQ Notify Usage
 
 
-#### Settings
+#### Preferences
 
-Get all setting groups and settings for your app
+Get all preference categories and preferences for your app
 ```ruby
-settings = Togglehq::Notify::Settings.all
+preferences = Togglehq::Notify::Preferences.all
 ```
 
-A `Togglehq::Notify::Settings` object has a `groups` attribute which contains an array of all setting groups:
+A `Togglehq::Notify::Preferences` object has a `categories` attribute which contains an array of all preference categories:
 ```ruby
-settings.groups
- => [{"name"=>"Friends", "key"=>"friends", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
+preferences.categories
+ => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
 ```
 
-Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
+Each preference category contains a name, a key, and an array of preferences, which also have a name, key, and default value.
 
 
-#### User Settings
+#### User Preferences
 
-`Togglehq::Notify::UserSettings` enapsulates a specific user's notification preferences for your app.
+`Togglehq::Notify::UserPreferences` enapsulates a specific user's notification preferences for your app.
 Create one by passing a `Togglehq::User` object:
 
 ```ruby
-user_settings = Togglehq::Notify::UserSettings.new(user)
+user_preferences = Togglehq::Notify::UserPreferences.new(user)
 ```
 
-Get the user's settings by calling the `groups` method:
+Get the user's preferences by calling the `categories` method:
 ```ruby
-user_settings.groups
- => [{"name"=>"Friends", "key"=>"friends", "settings"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true, "enabled"=>true}]}] 
+user_preferences.categories
+ => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true, "enabled"=>true}]}] 
 ```
 
-Like `Togglehq::Notify::Settings`, a `Togglehq::Notify::UserSettings` object has a `groups` attribute which contains an array of all setting groups.
-Each setting group contains a name, a key, and an array of settings, which also have a name, key, and default value.
-In addition, each user setting contains an enabled flag, indicating whether the user has enabled that particular setting or not.
+Like `Togglehq::Notify::Preferences`, a `Togglehq::Notify::UserPreferences` object has a `categories` attribute which contains an array of all preference categories.
+Each preference category contains a name, a key, and an array of preferences, which also have a name, key, and default value.
+In addition, each user preference contains an enabled flag, indicating whether the user has enabled that particular preference or not.
 
-Please note that a `Togglehq::Notify::UserSettings` object's `groups` property is memoized when fetched from the ToggleHQ API. To reload
-the settings, call the `reload!` method on the `Togglehq::Notify::UserSettings` object:
+Please note that a `Togglehq::Notify::UserPreferences` object's `categories` property is memoized when fetched from the ToggleHQ API. To reload
+the preferences, call the `reload!` method on the `Togglehq::Notify::UserPreferences` object:
 
 ```ruby
-user_settings.reload!
+user_preferences.reload!
 ```
 
-Enable a setting for a user
+Enable a preference for a user
 ```ruby
-user_settings.enable_setting!("group_key", "setting_key")
+user_preferences.enable_preference!("category_key", "preference_key")
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
-Disable a setting for a user
+Disable a preference for a user
 ```ruby
-user_settings.disable_setting!("group_key", "setting_key")
+user_preferences.disable_preference!("category_key", "preference_key")
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
 #### Notifications
 
-To send push notifications, first construct a `Togglehq::Notify::Notification` object specifying a setting group key, setting key, and message.
+To send push notifications, first construct a `Togglehq::Notify::Notification` object specifying a preference category key, preference key, and message.
 
 ```ruby
-notification = Togglehq::Notify::Notification.new(:group_key => "friends", :setting_key => "friend_request", :message => "You have a new friend request!")
+notification = Togglehq::Notify::Notification.new(:category_key => "friends", :preference_key => "friend_request", :message => "You have a new friend request!")
 ```
 To send this notification to a single user:
 
 ```ruby
-user = Togglehq::Notify::User.find_by_identifier("abc123")
+user = Togglehq::User.find_by_identifier("abc123")
 notification.send(user)
 ```
 This will return true upon success, and raise a RuntimeError on failure.
 
 To send this notification to a batch of users:
 ```ruby
-user1 = Togglehq::Notify::User.new(:identifier => "abc123")
-user2 = Togglehq::Notify::User.new(:identifier => "def456")
+user1 = Togglehq::User.new(:identifier => "abc123")
+user2 = Togglehq::User.new(:identifier => "def456")
 ...
-userN = Togglehq::Notify::User.new(:identifier => "xyz890")
+userN = Togglehq::User.new(:identifier => "xyz890")
 
 notification.batch_send([user1, user2, ..., user2])
 ```

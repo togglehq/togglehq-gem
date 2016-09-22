@@ -5,9 +5,9 @@ module Togglehq
     describe Notification do
       context "#initialize" do
         it "initializes from supported params" do
-          notification = Notification.new(group_key: "foo", setting_key: "bar", message: "hi mom")
-          expect(notification.group_key).to eq("foo")
-          expect(notification.setting_key).to eq("bar")
+          notification = Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom")
+          expect(notification.category_key).to eq("foo")
+          expect(notification.preference_key).to eq("bar")
           expect(notification.message).to eq("hi mom")
         end
       end
@@ -15,15 +15,15 @@ module Togglehq
       context "#send" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(group_key: "foo", setting_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
         let(:user) { User.new(identifier: "abc123") }
 
         context "403 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -35,8 +35,8 @@ module Togglehq
         context "404 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -49,8 +49,8 @@ module Togglehq
         context "422 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -63,8 +63,8 @@ module Togglehq
         context "200 response" do
           it "returns true" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -76,8 +76,8 @@ module Togglehq
         context "unexpected response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -90,7 +90,7 @@ module Togglehq
       context "#batch_send" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(group_key: "foo", setting_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
         let(:user1) { User.new(identifier: "abc123") }
         let(:user2) { User.new(identifier: "def456") }
@@ -99,8 +99,8 @@ module Togglehq
         context "403 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -112,8 +112,8 @@ module Togglehq
         context "404 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -126,8 +126,8 @@ module Togglehq
         context "422 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -140,8 +140,8 @@ module Togglehq
         context "200 response" do
           it "returns true" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -153,8 +153,8 @@ module Togglehq
         context "unexpected response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -167,14 +167,14 @@ module Togglehq
       context "#send_global" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(group_key: "foo", setting_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
 
         context "403 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -186,8 +186,8 @@ module Togglehq
         context "404 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -200,8 +200,8 @@ module Togglehq
         context "422 response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -214,8 +214,8 @@ module Togglehq
         context "200 response" do
           it "returns true" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
@@ -227,8 +227,8 @@ module Togglehq
         context "unexpected response" do
           it "raises an error" do
             expect(Togglehq::Request).to receive(:new).with("/notifications",
-                                                            :notification => {:group => "foo",
-                                                                              :setting => "bar",
+                                                            :notification => {:category => "foo",
+                                                                              :preference => "bar",
                                                                               :message => "hi mom",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)

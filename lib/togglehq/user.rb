@@ -35,7 +35,7 @@ module Togglehq
         self.persisted!
         json = JSON.parse(response.body)
         if json.has_key?("message") && json["message"] == "user already exists"
-          # load this user's settings
+          # load this user's preferences
           user = Togglehq::User.find_by_identifier(self.identifier)
         end
         return true

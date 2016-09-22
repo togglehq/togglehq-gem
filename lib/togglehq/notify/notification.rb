@@ -1,11 +1,11 @@
 module Togglehq
   module Notify
     class Notification
-      attr_accessor :group_key, :setting_key, :message
+      attr_accessor :category_key, :preference_key, :message
 
       def initialize(params = {})
-        @group_key = params[:group_key]
-        @setting_key = params[:setting_key]
+        @category_key = params[:category_key]
+        @preference_key = params[:preference_key]
         @message = params[:message]
       end
 
@@ -14,8 +14,8 @@ module Togglehq
       # @raise [RuntimeError] raised if an error occurs sending the notification
       def send(user)
         response = Togglehq::Request.new("/notifications",
-                                         {:notification => {:group => self.group_key,
-                                                            :setting => self.setting_key,
+                                         {:notification => {:category => self.category_key,
+                                                            :preference => self.preference_key,
                                                             :message => self.message,
                                                             :user => user.identifier}}).post!
         if response.status == 403
@@ -35,8 +35,8 @@ module Togglehq
       # @raise [RuntimeError] raised if an error occurs sending the notification
       def batch_send(users)
         response = Togglehq::Request.new("/notifications",
-                                         {:notification => {:group => self.group_key,
-                                                            :setting => self.setting_key,
+                                         {:notification => {:category => self.category_key,
+                                                            :preference => self.preference_key,
                                                             :message => self.message,
                                                             :users => users.map {|u| u.identifier}}}).post!
         if response.status == 403
@@ -55,8 +55,8 @@ module Togglehq
       # @raise [RuntimeError] raised if an error occurs sending the notification
       def send_global
         response = Togglehq::Request.new("/notifications",
-                                         {:notification => {:group => self.group_key,
-                                                            :setting => self.setting_key,
+                                         {:notification => {:category => self.category_key,
+                                                            :preference => self.preference_key,
                                                             :message => self.message,
                                                             :global => true}}).post!
         if response.status == 403
