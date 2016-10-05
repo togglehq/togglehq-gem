@@ -33,7 +33,7 @@ module Togglehq
 
   def self.connection
     conn = Faraday.new(:url => config.uri) do |faraday|
-      faraday.adapter :net_http_persistent
+      faraday.adapter config.adapter
       faraday.response :logger, self.logger, bodies: true if config.log_requests
     end
     conn

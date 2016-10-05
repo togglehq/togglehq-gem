@@ -53,5 +53,18 @@ module Togglehq
         expect(config.log_requests).to eq(true)
       end
     end
+
+    describe "#adapter" do
+      it "defaults to :net_http_persistent" do
+        config = Config.new
+        expect(config.log_requests).to eq(false)
+      end
+
+      it "can set a value for adapter" do
+        config = Config.new
+        config.adapter = :net_http
+        expect(config.adapter).to eq(:net_http)
+      end
+    end
   end
 end
