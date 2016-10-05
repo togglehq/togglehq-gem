@@ -29,6 +29,10 @@ Togglehq.configure do |config|
 
   # To log the HTTP requests/responses to and from the ToggleHQ API, set log_requests to true (defaults to false)
   config.log_requests = true
+
+  # To modify the adapter used for network connections (defaults to :net_http_persistent)
+  # Available: [:net_http, :net_http_persistent, :excon, :typhoeus, :patron, :em_http, :httpclient]
+  config.adapter = :net_http
 end
 ```
 
@@ -66,7 +70,7 @@ preferences = Togglehq::Notify::Preferences.all
 A `Togglehq::Notify::Preferences` object has a `categories` attribute which contains an array of all preference categories:
 ```ruby
 preferences.categories
- => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}] 
+ => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true}]}]
 ```
 
 Each preference category contains a name, a key, and an array of preferences, which also have a name, key, and default value.
@@ -84,7 +88,7 @@ user_preferences = Togglehq::Notify::UserPreferences.new(user)
 Get the user's preferences by calling the `categories` method:
 ```ruby
 user_preferences.categories
- => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true, "enabled"=>true}]}] 
+ => [{"name"=>"Friends", "key"=>"friends", "preferences"=>[{"name"=>"Friend Request", "key"=>"friend_request", "default"=>true, "enabled"=>true}]}]
 ```
 
 Like `Togglehq::Notify::Preferences`, a `Togglehq::Notify::UserPreferences` object has a `categories` attribute which contains an array of all preference categories.
