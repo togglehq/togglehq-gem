@@ -1,6 +1,7 @@
 require 'togglehq/version'
 require 'togglehq/config'
 require 'togglehq/request'
+require 'togglehq/device'
 require 'togglehq/user'
 require 'logger'
 

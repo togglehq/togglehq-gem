@@ -56,6 +56,33 @@ If a user with the given identifier cannot be found, `nil` will be returned.
 
 Alternatively, you can call `Togglehq::User.find_by_identifier!`, which will raise a RuntimeError if the given user cannot be found.
 
+### Devices
+
+Create a device (usually done via the ToggleHQ SDK)
+
+```ruby
+device = Togglehq::Device.new(:os => "ios", :os_version => 10.0, :manufacturer => "Apple", :model => "iPhone")
+device.save
+```
+If created successfully, `device.uuid` will return the unique device identifier.
+
+Enable a device to receive notifications
+```ruby
+device = Togglehq::Device.new(:uuid => "123456789")
+device.enable!("2b6f0cc4...831186")
+```
+
+Assign a device to a specific user
+```ruby
+device = Togglehq::Device.new(:uuid => "123456789")
+device.assign!("abcdef0123456789")
+```
+
+Unassign a device from all users
+```ruby
+device = Togglehq::Device.new(:uuid => "123456789")
+device.unassign!
+```
 
 ### ToggleHQ Notify Usage
 
