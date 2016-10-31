@@ -54,7 +54,7 @@ module Togglehq
       end
     end
 
-    # Saves a new user
+    # Saves a new device
     def save
       response = Togglehq::Request.new("/devices", {"device" => {"os" => self.os, "os_version" => self.os_version, "manufacturer" => self.manufacturer, "model" => self.model}}).post!
       if response.status == 200
