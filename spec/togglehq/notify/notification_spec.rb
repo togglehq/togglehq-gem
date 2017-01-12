@@ -15,7 +15,7 @@ module Togglehq
       context "#send" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom", sound: "default") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
         let(:user) { User.new(identifier: "abc123") }
 
@@ -25,6 +25,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).and_return(403)
@@ -38,6 +39,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).twice.and_return(404)
@@ -52,6 +54,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(3).times.and_return(422)
@@ -66,6 +69,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(200)
@@ -79,6 +83,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :user => "abc123"}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(500)
@@ -90,7 +95,7 @@ module Togglehq
       context "#batch_send" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom", sound: "default") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
         let(:user1) { User.new(identifier: "abc123") }
         let(:user2) { User.new(identifier: "def456") }
@@ -102,6 +107,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).and_return(403)
@@ -115,6 +121,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).twice.and_return(404)
@@ -129,6 +136,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(3).times.and_return(422)
@@ -143,6 +151,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(200)
@@ -156,6 +165,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :users => ["abc123", "def456"]}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(500)
@@ -167,7 +177,7 @@ module Togglehq
       context "#send_global" do
         let(:mock_request) { double("request") }
         let(:mock_response) { double("response") }
-        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom") }
+        let(:notification) { Notification.new(category_key: "foo", preference_key: "bar", message: "hi mom", sound: "default") }
         let(:error_response) { {parameter: "foo", message: "something bad has happened"}.to_json }
 
         context "403 response" do
@@ -176,6 +186,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).and_return(403)
@@ -189,6 +200,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).twice.and_return(404)
@@ -203,6 +215,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(3).times.and_return(422)
@@ -217,6 +230,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(200)
@@ -230,6 +244,7 @@ module Togglehq
                                                             :notification => {:category => "foo",
                                                                               :preference => "bar",
                                                                               :message => "hi mom",
+                                                                              :sound => "default",
                                                                               :global => true}).and_return(mock_request)
             expect(mock_request).to receive(:post!).and_return(mock_response)
             expect(mock_response).to receive(:status).exactly(4).times.and_return(500)

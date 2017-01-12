@@ -1,12 +1,13 @@
 module Togglehq
   module Notify
     class Notification
-      attr_accessor :category_key, :preference_key, :message
+      attr_accessor :category_key, :preference_key, :message, :sound
 
       def initialize(params = {})
         @category_key = params[:category_key]
         @preference_key = params[:preference_key]
         @message = params[:message]
+        @sound = params[:sound]
       end
 
       # Sends this notification to the given user.
@@ -17,6 +18,7 @@ module Togglehq
                                          {:notification => {:category => self.category_key,
                                                             :preference => self.preference_key,
                                                             :message => self.message,
+                                                            :sound => self.sound,
                                                             :user => user.identifier}}).post!
         if response.status == 403
           raise "Access denied. You must use your Master OAuth client_id and client_secret to send push notifications."
@@ -38,6 +40,7 @@ module Togglehq
                                          {:notification => {:category => self.category_key,
                                                             :preference => self.preference_key,
                                                             :message => self.message,
+                                                            :sound => self.sound,
                                                             :users => users.map {|u| u.identifier}}}).post!
         if response.status == 403
           raise "Access denied. You must use your Master OAuth client_id and client_secret to send push notifications."
@@ -58,6 +61,7 @@ module Togglehq
                                          {:notification => {:category => self.category_key,
                                                             :preference => self.preference_key,
                                                             :message => self.message,
+                                                            :sound => self.sound,
                                                             :global => true}}).post!
         if response.status == 403
           raise "Access denied. You must use your Master OAuth client_id and client_secret to send push notifications."
